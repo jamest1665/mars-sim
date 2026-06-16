@@ -1,4 +1,4 @@
-# Mars Simulator (v0.8)
+# Mars Simulator (v0.9)
 
 **Standalone, modular, production-ready C++23 Mars environment simulator.**
 
@@ -10,11 +10,13 @@
 - Human Survival Models (v0.5)
 - Visualization & Scenario Runner (v0.6)
 - Testing, CI & Documentation improvements (v0.7)
-- Power Systems (v0.8) — solar + nuclear + battery with dust accumulation
-- Closed-Loop Agent Control (v0.8)
+- Power Systems (v0.8)
+- Closed-Loop Agent Control + Full Mission Orchestrator (v0.9)
 - Surface Operations & Mobility (v0.8)
+- Reliability & Failure Modeling (v0.9)
+- Reference Missions (v0.9)
 
-Full end-to-end pipeline from planetary physics → crew health → autonomous decision making + surface operations.
+Full end-to-end pipeline from planetary physics → crew health → autonomous agents → surface operations + reliability.
 
 ## Repository
 
@@ -37,6 +39,7 @@ cmake --build . -j
 ./humans_demo
 ./viz_demo
 ./foundation_tests
+./reference_mission
 ```
 
 Requires C++23 compiler (GCC 11+, Clang 16+, MSVC 2022+ recommended). No external dependencies.
@@ -46,10 +49,10 @@ Requires C++23 compiler (GCC 11+, Clang 16+, MSVC 2022+ recommended). No externa
 **From first principles:**
 - All models in **SI units**, double precision.
 - **Modular** composition via rich `EnvironmentState` passed between layers.
-- Full pipeline now exists from planetary physics → weather → terraforming → habitats → human health → power systems → agent decision making → surface operations.
+- The simulator now supports closed-loop agent decision making inside full mission simulations, with reliability overlays.
 
-**v0.8 Status**
-Complete core pipeline + power modeling + closed-loop agents + surface operations. Ready for deeper integration and scenario work.
+**v0.9 Status**
+Agents can now influence power and operations in real time. Reliability and reference mission capability added.
 
 ## Roadmap (Sequential Core-Out)
 
@@ -61,5 +64,6 @@ Complete core pipeline + power modeling + closed-loop agents + surface operation
 6. ✅ **Visualization & Scenario Runner** (v0.6)
 7. ✅ **Testing + CI** (v0.7)
 8. ✅ **Power + Agent Control + Surface Ops** (v0.8)
+9. ✅ **Agent Integration + Reliability + Reference Missions** (v0.9)
 
 Failure is mandatory. Quitting is not. — SkyForge Dynamics style.

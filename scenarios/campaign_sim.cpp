@@ -1,6 +1,6 @@
 /**
  * @file campaign_sim.cpp
- * @brief Full Campaign Simulator demo with dashboard.
+ * @brief Campaign Simulator with risk, resources, and dashboard.
  */
 
 #include "mars/campaign/campaign.hpp"
@@ -13,40 +13,31 @@ using namespace mars::agents;
 
 int main() {
     std::cout << "=== Mars Campaign Simulator v1.2 ===\n";
-    std::cout << "Long-term colony campaign with adaptive agents\n\n";
+    std::cout << "Risk, Resources, Cost & What-If Ready\n\n";
 
     CampaignSimulator sim;
     auto result = sim.run_campaign(15.0, AgentStrategy::BALANCED, 6, 2.5);
 
     std::cout << std::fixed << std::setprecision(1);
-    std::cout << "Year | Pop | Pressure | Bone% | Cancer% | Power Margin | Supply? | Failure?\n";
-    std::cout << "-----|-----|----------|-------|---------|--------------|---------|---------\n";
+    std::cout << "Year | Pop | Bone% | Risk | O2(kg) | Water(kg) | Cost($M) | Supply?\n";
+    std::cout << "-----|-----|-------|------|--------|-----------|----------|--------\n";
 
     for (const auto& y : result.yearly_data) {
         std::cout << std::setw(4) << y.year << " | "
                   << std::setw(3) << y.population << " | "
-                  << std::setw(8) << y.pressure_kpa << " | "
                   << std::setw(5) << y.bone_density_avg << " | "
-                  << std::setw(7) << y.cancer_risk << " | "
-                  << std::setw(12) << y.power_margin_kw << " | "
-                  << (y.supply_ship_arrived ? "  Yes  " : "   -   ") << " | "
-                  << (y.major_failure ? " Yes " : "  -  ") << "\n";
+                  << std::setw(4) << y.cumulative_risk << " | "
+                  << std::setw(6) << y.o2_stockpile_kg << " | "
+                  << std::setw(9) << y.water_stockpile_kg << " | "
+                  << std::setw(8) << y.mission_cost_musd << " | "
+                  << (y.supply_ship_arrived ? "Yes" : "-") << "\n";
     }
 
-    std::cout << "\n=== Campaign Summary ===\n";
-    std::cout << "Final Population:           " << result.yearly_data.back().population << "\n";
-    std::cout << "Campaign Duration:          " << result.colony_sustainability_years << " years\n";
-    std::cout << "Final Risk Score:           " << result.final_risk_score << "\n";
-    std::cout << "Campaign Success:           " << (result.campaign_success ? "YES" : "NO") << "\n";
-
-    if (!result.yearly_data.empty()) {
-        double avg_power = 0.0;
-        for (const auto& y : result.yearly_data) avg_power += y.power_margin_kw;
-        avg_power /= result.yearly_data.size();
-        std::cout << "Average Power Margin:     " << avg_power << " kW\n";
-    }
-
-    std::cout << "\nThis is now a real mission-planning engine.\n";
+    std::cout << "\n=== Summary ===\n";
+    std::cout << "Final Pop: " << result.yearly_data.back().population << " | "
+              << "Risk: " << result.final_risk_score << " | "
+              << "Cost: $" << int(result.total_cost_musd) << "M | "
+              << (result.campaign_success ? "SUCCESS" : "FAIL") << "\n";
 
     return 0;
 }

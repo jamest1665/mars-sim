@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(mars_sim VERSION 0.1.0 LANGUAGES CXX)
+project(mars_sim VERSION 0.2.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -12,7 +12,7 @@ else()
     add_compile_options(-Wall -Wextra -Wpedantic -Wshadow -Wconversion -Wsign-conversion)
 endif()
 
-# Core library
+# Core libraries
 add_library(mars_foundation STATIC
     src/foundation/environment.cpp
 )
@@ -20,20 +20,31 @@ target_include_directories(mars_foundation PUBLIC
     ${CMAKE_CURRENT_SOURCE_DIR}/include
 )
 
-# Example executable
+add_library(mars_weather STATIC
+    src/weather/weather.cpp
+)
+target_include_directories(mars_weather PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_link_libraries(mars_weather PUBLIC mars_foundation)
+
+# Example executables
 add_executable(foundation_demo examples/foundation_demo.cpp)
-target_link_libraries(foundation_demo PRIVATE mars_foundation)
+target_link_libraries(foundation_demo PRIVATE mars_foundation mars_weather)
+
+add_executable(weather_demo examples/weather_demo.cpp)
+target_link_libraries(weather_demo PRIVATE mars_foundation mars_weather)
 
 # Simple test executable (no external test framework for standalone)
 add_executable(foundation_tests tests/foundation_tests.cpp)
-target_link_libraries(foundation_tests PRIVATE mars_foundation)
+target_link_libraries(foundation_tests PRIVATE mars_foundation mars_weather)
 
 # Install rules (production)
-install(TARGETS mars_foundation foundation_demo foundation_tests
+install(TARGETS mars_foundation mars_weather foundation_demo weather_demo foundation_tests
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 install(DIRECTORY include/ DESTINATION include)
 
-message(STATUS "Mars Simulator Foundation configured. Build with: cmake --build . --config Release")
+message(STATUS "Mars Simulator v0.2 configured (foundation + weather). Build with: cmake --build . --config Release")

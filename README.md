@@ -1,4 +1,4 @@
-# Mars Simulator (v0.6)
+# Mars Simulator (v0.8)
 
 **Standalone, modular, production-ready C++23 Mars environment simulator.**
 
@@ -8,9 +8,12 @@
 - Terraforming (v0.3)
 - Habitats + Resource Loops (v0.4)
 - Human Survival Models (v0.5)
-- Visualization & Scenario Runner (v0.6) — Monte Carlo, CSV export, what-if analysis
+- Visualization & Scenario Runner (v0.6)
+- Power Systems (v0.8) — solar + nuclear + battery with dust accumulation
+- Closed-Loop Agent Control (v0.8)
+- Surface Operations & Mobility (v0.8)
 
-Full end-to-end pipeline from planetary physics to crew health + scenario exploration.
+Full end-to-end pipeline from planetary physics → crew health → autonomous decision making.
 
 ## Repository
 
@@ -42,23 +45,26 @@ Requires C++23 compiler (GCC 11+, Clang 16+, MSVC 2022+ recommended). No externa
 **From first principles:**
 - All models in **SI units**, double precision.
 - **Modular** composition via rich `EnvironmentState` passed between layers.
-- Full pipeline now exists from planetary physics → weather → terraforming → habitats → human health → scenario/Monte Carlo exploration.
+- Full pipeline now exists from planetary physics → weather → terraforming → habitats → human health → power systems → agent decision making.
 
-**v0.6 Achievement**
-Complete physics-to-scenario capability. Users can now run Monte Carlo studies and export data for analysis.
+**v0.8 Achievement**
+Added realistic power modeling (dust on solar, batteries), closed-loop agent control, and surface operations/mobility.
 
-## API Overview (v0.6)
+## API Overview (v0.8)
 
 ```cpp
-#include "mars/viz/viz.hpp"
+#include "mars/power/power.hpp"
+#include "mars/agents/controller.hpp"
+#include "mars/operations/operations.hpp"
 
-mars::viz::ScenarioRunner runner;
-auto results = runner.run_monte_carlo(100, 3.0);
-runner.export_monte_carlo_summary(results, "summary.csv");
-runner.export_to_csv(results[0], "detailed_run.csv");
+mars::power::MarsPower power;
+mars::agents::AgentController agent;
+mars::operations::SurfaceOperations ops;
+
+power.update(state, years, demand);
+agent.step(power.state(), resources, years);
+ops.update(state, years, crew);
 ```
-
-See `viz_demo` for concrete usage.
 
 ## Roadmap (Sequential Core-Out)
 
@@ -67,8 +73,7 @@ See `viz_demo` for concrete usage.
 3. ✅ **Terraforming** (v0.3)
 4. ✅ **Habitats + Resource Loops** (v0.4)
 5. ✅ **Human Survival Models** (v0.5)
-6. ✅ **Visualization & Scenario Runner** (v0.6) — this release
-7. Modularity, testing, documentation & examples expansion
-8+. Autonomous agents, logistics/economics, full mission orchestrator
+6. ✅ **Visualization & Scenario Runner** (v0.6)
+7. ✅ **Power Systems + Agent Control + Surface Ops** (v0.8)
 
 Failure is mandatory. Quitting is not. — SkyForge Dynamics style.

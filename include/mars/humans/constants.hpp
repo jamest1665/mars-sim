@@ -23,6 +23,9 @@ inline constexpr double CANCER_RISK_PER_SV = 5.0;
 /// Acute radiation syndrome threshold (Sv)
 inline constexpr double ARS_THRESHOLD_SV = 1.0;
 
+/// Simple pharma countermeasure effectiveness (reduces effective dose)
+inline constexpr double PHARMA_COUNTERMEASURE_EFFICIENCY = 0.25;
+
 /// Daily caloric requirement per person (kcal)
 inline constexpr double DAILY_CALORIES_PER_PERSON = 2500.0;
 

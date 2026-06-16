@@ -141,4 +141,24 @@ bool ScenarioRunner::export_monte_carlo_summary(const std::vector<ScenarioResult
     return true;
 }
 
+void ScenarioRunner::print_mission_report(const ScenarioResult& result) {
+    if (result.time_series.empty()) {
+        std::cout << "No data in scenario result.\n";
+        return;
+    }
+
+    const auto& start = result.time_series.front();
+    const auto& end = result.time_series.back();
+
+    std::cout << "\n=== Mission Report ===\n";
+    std::cout << "Duration: " << end.year << " years\n";
+    std::cout << "Final Pressure: " << end.pressure_kpa << " kPa\n";
+    std::cout << "Final GCR Dose: " << end.gcr_dose_msv_per_day << " mSv/day\n";
+    std::cout << "Final Bone Density: " << end.bone_density_percent << "%\n";
+    std::cout << "Final Cancer Risk Increase: " << end.cancer_risk_increase << "%\n";
+    std::cout << "Habitat Sustainable: " << (end.habitat_sustainable ? "Yes" : "No") << "\n";
+    std::cout << "Overall Mission Success: " << (result.mission_successful ? "SUCCESS" : "FAILURE") << "\n";
+    std::cout << "========================\n\n";
+}
+
 } // namespace mars::viz

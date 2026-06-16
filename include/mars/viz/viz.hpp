@@ -43,6 +43,9 @@ public:
     /// Export multiple results summary (success rate, average final health, etc.)
     static bool export_monte_carlo_summary(const std::vector<ScenarioResult>& results,
                                            const std::string& filename);
+
+    /// Print a nice human-readable mission summary to console
+    static void print_mission_report(const ScenarioResult& result);
 };
 
 } // namespace mars::viz

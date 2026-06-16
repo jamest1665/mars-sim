@@ -19,9 +19,10 @@ HumanHealthState MarsHumans::update_health(
 
     HumanHealthState health;
 
-    // Radiation cumulative + risk
+    // Radiation cumulative + risk (with simple pharma countermeasure modeling)
     const double annual_dose_sv = env_state.radiation.gcr_dose_equiv_msv_per_day * 365.25 / 1000.0;
-    health.cumulative_radiation_dose_sv = annual_dose_sv * years_elapsed;
+    const double effective_dose = annual_dose_sv * (1.0 - PHARMA_COUNTERMEASURE_EFFICIENCY * 0.6);
+    health.cumulative_radiation_dose_sv = effective_dose * years_elapsed;
     health.cancer_risk_increase_percent = health.cumulative_radiation_dose_sv * CANCER_RISK_PER_SV;
     health.acute_radiation_syndrome_risk = health.cumulative_radiation_dose_sv > ARS_THRESHOLD_SV;
 

@@ -1,15 +1,16 @@
 # Mars Simulator (v1.2)
 
-**Standalone, modular, production-ready C++23 Mars environment simulator.**
+**Production-grade Mars mission planning & simulation engine.**
 
-**Key Capabilities:**
-- Full physics-to-human pipeline
-- Realistic power with dust accumulation
-- Adaptive agent strategies (Conservative / Balanced / Aggressive)
-- Campaign Simulator with colony growth & Earth supply events
-- Reliability & failure modeling with maintenance
-- Optimization layer for strategy & supply cadence
+**Core Features:**
+- Full physics → habitats → humans pipeline
+- Adaptive agent strategies with memory
+- Campaign Simulator (colony growth, supply events, reliability)
+- Risk tracking + resource forecasting (O2, water, propellant)
+- Economic cost modeling
+- What-if strategy comparison
+- Mission optimizer (best strategy + supply cadence)
 
-**v1.2 Additions:** Smarter adaptive agents + basic mission optimizer.
+**v1.2** delivers a real long-term mission planning tool with risk heatmaps (via cumulative risk), resource projections, and branchable what-ifs.
 
 Failure is mandatory. Quitting is not. — SkyForge Dynamics style.

@@ -9,11 +9,12 @@
 - Habitats + Resource Loops (v0.4)
 - Human Survival Models (v0.5)
 - Visualization & Scenario Runner (v0.6)
+- Testing, CI & Documentation improvements (v0.7)
 - Power Systems (v0.8) — solar + nuclear + battery with dust accumulation
 - Closed-Loop Agent Control (v0.8)
 - Surface Operations & Mobility (v0.8)
 
-Full end-to-end pipeline from planetary physics → crew health → autonomous decision making.
+Full end-to-end pipeline from planetary physics → crew health → autonomous decision making + surface operations.
 
 ## Repository
 
@@ -45,26 +46,10 @@ Requires C++23 compiler (GCC 11+, Clang 16+, MSVC 2022+ recommended). No externa
 **From first principles:**
 - All models in **SI units**, double precision.
 - **Modular** composition via rich `EnvironmentState` passed between layers.
-- Full pipeline now exists from planetary physics → weather → terraforming → habitats → human health → power systems → agent decision making.
+- Full pipeline now exists from planetary physics → weather → terraforming → habitats → human health → power systems → agent decision making → surface operations.
 
-**v0.8 Achievement**
-Added realistic power modeling (dust on solar, batteries), closed-loop agent control, and surface operations/mobility.
-
-## API Overview (v0.8)
-
-```cpp
-#include "mars/power/power.hpp"
-#include "mars/agents/controller.hpp"
-#include "mars/operations/operations.hpp"
-
-mars::power::MarsPower power;
-mars::agents::AgentController agent;
-mars::operations::SurfaceOperations ops;
-
-power.update(state, years, demand);
-agent.step(power.state(), resources, years);
-ops.update(state, years, crew);
-```
+**v0.8 Status**
+Complete core pipeline + power modeling + closed-loop agents + surface operations. Ready for deeper integration and scenario work.
 
 ## Roadmap (Sequential Core-Out)
 
@@ -74,6 +59,7 @@ ops.update(state, years, crew);
 4. ✅ **Habitats + Resource Loops** (v0.4)
 5. ✅ **Human Survival Models** (v0.5)
 6. ✅ **Visualization & Scenario Runner** (v0.6)
-7. ✅ **Power Systems + Agent Control + Surface Ops** (v0.8)
+7. ✅ **Testing + CI** (v0.7)
+8. ✅ **Power + Agent Control + Surface Ops** (v0.8)
 
 Failure is mandatory. Quitting is not. — SkyForge Dynamics style.

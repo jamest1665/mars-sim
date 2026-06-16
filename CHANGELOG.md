@@ -5,6 +5,19 @@ All notable changes to the Mars Simulator will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.3.0] - 2026-06-16
+
+### Added
+- Terraforming module (`mars::terraforming`): parametric atmosphere thickening, temperature response via greenhouse effect, radiation shielding improvement with column depth, basic ISRU energy cost proxy.
+- `MarsTerraforming` class with `Config` and `apply_to_state()` that composes cleanly with foundation + weather `EnvironmentState`.
+- `terraforming_demo` showing 100-year progression at a representative site (pressure, temp, GCR dose, solar).
+- Full v0.3 stack demo and updated build/docs.
+
+### Notes
+- Terraforming now provides a modified atmospheric state suitable as input for habitats and human survival models.
+- Models are first-order parametric (energy balance + column depth). Full 3D climate + circulation feedback planned for later.
+- Radiation dose reduction and warming are now quantifiable over engineering time scales.
+
 ## [0.2.0] - 2026-06-16
 
 ### Added

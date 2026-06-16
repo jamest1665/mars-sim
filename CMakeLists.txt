@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(mars_sim VERSION 0.2.0 LANGUAGES CXX)
+project(mars_sim VERSION 0.3.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -28,23 +28,34 @@ target_include_directories(mars_weather PUBLIC
 )
 target_link_libraries(mars_weather PUBLIC mars_foundation)
 
+add_library(mars_terraforming STATIC
+    src/terraforming/terraforming.cpp
+)
+target_include_directories(mars_terraforming PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_link_libraries(mars_terraforming PUBLIC mars_foundation mars_weather)
+
 # Example executables
 add_executable(foundation_demo examples/foundation_demo.cpp)
-target_link_libraries(foundation_demo PRIVATE mars_foundation mars_weather)
+target_link_libraries(foundation_demo PRIVATE mars_foundation mars_weather mars_terraforming)
 
 add_executable(weather_demo examples/weather_demo.cpp)
 target_link_libraries(weather_demo PRIVATE mars_foundation mars_weather)
 
+add_executable(terraforming_demo examples/terraforming_demo.cpp)
+target_link_libraries(terraforming_demo PRIVATE mars_foundation mars_weather mars_terraforming)
+
 # Simple test executable (no external test framework for standalone)
 add_executable(foundation_tests tests/foundation_tests.cpp)
-target_link_libraries(foundation_tests PRIVATE mars_foundation mars_weather)
+target_link_libraries(foundation_tests PRIVATE mars_foundation mars_weather mars_terraforming)
 
 # Install rules (production)
-install(TARGETS mars_foundation mars_weather foundation_demo weather_demo foundation_tests
+install(TARGETS mars_foundation mars_weather mars_terraforming foundation_demo weather_demo terraforming_demo foundation_tests
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 install(DIRECTORY include/ DESTINATION include)
 
-message(STATUS "Mars Simulator v0.2 configured (foundation + weather). Build with: cmake --build . --config Release")
+message(STATUS "Mars Simulator v0.3 configured (foundation + weather + terraforming). Build with: cmake --build . --config Release")

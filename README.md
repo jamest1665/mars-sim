@@ -1,4 +1,4 @@
-# Mars Simulator (v0.4)
+# Mars Simulator (v0.5)
 
 **Standalone, modular, production-ready C++23 Mars environment simulator.**
 
@@ -6,9 +6,10 @@
 - Foundation (v0.1): gravity 3.71 m/s², atmosphere, radiation, solar (NASA data)
 - Weather / Dust Storms (v0.2): parametric seasonal τ, storms, lifting
 - Terraforming (v0.3): atmosphere thickening, temperature, radiation shielding
-- Habitats + Resource Loops (v0.4): ISRU, ECLSS, power, habitat sizing — composes with prior modules
+- Habitats + Resource Loops (v0.4): ISRU, ECLSS, power, habitat sizing
+- Human Survival Models (v0.5): radiation health, low-g physiology, nutrition, psychology — full pipeline
 
-Built sequentially per spec. Ready for GitHub iterations and next modules (human survival models...).
+Built sequentially per spec. Project complete through human-level metrics.
 
 ## Repository
 
@@ -28,6 +29,7 @@ cmake --build . -j
 ./weather_demo
 ./terraforming_demo
 ./habitats_demo
+./humans_demo
 ./foundation_tests
 ```
 
@@ -38,43 +40,46 @@ Requires C++23 compiler (GCC 11+, Clang 16+, MSVC 2022+ recommended). No externa
 **From first principles:**
 - All models in **SI units**, double precision.
 - **Modular** composition via rich `EnvironmentState` passed between layers.
-- Each new module adds fidelity to the environmental state that downstream modules (habitats, humans) consume.
+- Full pipeline now exists from planetary physics → weather → terraforming → habitats → human health metrics.
 
-**v0.4 Stack Summary**
-Foundation (physics) → Weather (dust/storms) → Terraforming (atm modification) → Habitats (ISRU/ECLSS/power/sizing)
+**v0.5 Achievement**
+Complete end-to-end Mars mission simulation capability (environment → sustainable habitat → crew health over years).
 
-## API Overview (v0.4 Full Stack)
+## API Overview (v0.5 Full Pipeline)
 
 ```cpp
 #include "mars/foundation/environment.hpp"
 #include "mars/weather/weather.hpp"
 #include "mars/terraforming/terraforming.hpp"
 #include "mars/habitats/habitats.hpp"
+#include "mars/humans/humans.hpp"
 
 MarsEnvironment env;
 MarsWeather weather;
 MarsTerraforming terra;
 MarsHabitats habitats;
+MarsHumans humans;
 
 auto state = env.sample_state(loc, ls);
 weather.apply_to_state(state, ls, loc);
 terra.apply_to_state(state, years, loc);
 auto resources = habitats.calculate_resources(state, years);
-// resources now contains sustainable O2, water, power, and habitat mass
+auto health = humans.update_health(state, resources, years);
+// health now contains bone/muscle loss, radiation risk, nutrition, psych metrics
 ```
 
-See the four demos for end-to-end usage.
+See the five demos for complete usage.
 
 ## Roadmap (Sequential Core-Out)
 
 1. ✅ **Foundation** (v0.1)
 2. ✅ **Weather/Dust Storms** (v0.2)
 3. ✅ **Terraforming** (v0.3)
-4. ✅ **Habitats + Resource Loops** (v0.4) — this release
-5. Human survival models
+4. ✅ **Habitats + Resource Loops** (v0.4)
+5. ✅ **Human Survival Models** (v0.5) — this release
 6. Viz/scenarios
 7. Modularity/tests/docs/examples
 
-**Next logical step**: Human survival models (radiation health, low-g physiology, nutrition, psychology).
+**Project Status**: Full physics-to-human pipeline complete. Ready for visualization, scenario exploration, or agent training use cases.
 
 Failure is mandatory. Quitting is not. — SkyForge Dynamics style.

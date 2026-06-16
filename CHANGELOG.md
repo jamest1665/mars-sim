@@ -5,6 +5,19 @@ All notable changes to the Mars Simulator will be documented here.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.5.0] - 2026-06-16
+
+### Added
+- Human Survival Models module (`mars::humans`): radiation health (cumulative dose, cancer risk, ARS), low-g physiology (bone/muscle loss, cardiovascular), nutrition status from habitat resources, psychological wellbeing.
+- `MarsHumans` class with `update_health()` that produces comprehensive crew health metrics from the full upstream stack.
+- `humans_demo` showing 3-year mission health trajectory with good terraforming + habitats.
+- Full v0.5 end-to-end stack.
+
+### Notes
+- With aggressive terraforming and sustainable habitats, crew health remains within acceptable limits for a 3-year mission.
+- Models are first-order parametric. Detailed medical simulation and countermeasures optimization planned for later.
+- Project now has a complete physics-to-human pipeline.
+
 ## [0.4.0] - 2026-06-16
 
 ### Added

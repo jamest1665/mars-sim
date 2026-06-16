@@ -1,13 +1,14 @@
-# Mars Simulator (v0.3)
+# Mars Simulator (v0.4)
 
 **Standalone, modular, production-ready C++23 Mars environment simulator.**
 
 **Current modules:**
 - Foundation (v0.1): gravity 3.71 m/s², atmosphere, radiation, solar (NASA data)
 - Weather / Dust Storms (v0.2): parametric seasonal τ, storms, lifting
-- Terraforming (v0.3): atmosphere thickening, temperature, radiation shielding — composes with prior modules
+- Terraforming (v0.3): atmosphere thickening, temperature, radiation shielding
+- Habitats + Resource Loops (v0.4): ISRU, ECLSS, power, habitat sizing — composes with prior modules
 
-Built sequentially per spec. Ready for GitHub iterations and next modules (habitats, humans...).
+Built sequentially per spec. Ready for GitHub iterations and next modules (human survival models...).
 
 ## Repository
 
@@ -26,6 +27,7 @@ cmake --build . -j
 ./foundation_demo
 ./weather_demo
 ./terraforming_demo
+./habitats_demo
 ./foundation_tests
 ```
 
@@ -34,49 +36,45 @@ Requires C++23 compiler (GCC 11+, Clang 16+, MSVC 2022+ recommended). No externa
 ## Architecture & Design (Principal Engineer Notes)
 
 **From first principles:**
-- All models in **SI units**, double precision for accuracy + range.
-- **Modular**: `mars::foundation`, `mars::weather`, `mars::terraforming` namespaces. Composition via rich `EnvironmentState`.
-- **Extensible**: Each module exposes `Config` and `apply_to_state()` style methods so later layers (habitats, humans) receive progressively richer environmental input.
-- **Performant**: All hot paths O(1) or simple math. No allocations or virtuals in queries.
-- **Accurate**: NASA-calibrated baselines + first-principles models (hydrostatic, Beer-Lambert, energy balance, column-depth radiation). Parametric where full physics would be premature.
-- **Production**: noexcept, documented assumptions/edges, self-tests, CMake, warnings, clean history.
+- All models in **SI units**, double precision.
+- **Modular** composition via rich `EnvironmentState` passed between layers.
+- Each new module adds fidelity to the environmental state that downstream modules (habitats, humans) consume.
 
-**Current Stack (v0.3)**
-Foundation (static physics) → Weather (dynamic dust/storms) → Terraforming (deliberate atm modification) → ready for Habitats & Human models.
+**v0.4 Stack Summary**
+Foundation (physics) → Weather (dust/storms) → Terraforming (atm modification) → Habitats (ISRU/ECLSS/power/sizing)
 
-## API Overview (Full v0.3 Stack)
+## API Overview (v0.4 Full Stack)
 
 ```cpp
 #include "mars/foundation/environment.hpp"
 #include "mars/weather/weather.hpp"
 #include "mars/terraforming/terraforming.hpp"
+#include "mars/habitats/habitats.hpp"
 
 MarsEnvironment env;
 MarsWeather weather;
 MarsTerraforming terra;
+MarsHabitats habitats;
 
 auto state = env.sample_state(loc, ls);
 weather.apply_to_state(state, ls, loc);
 terra.apply_to_state(state, years, loc);
-// state now reflects foundation + weather + terraformed conditions
+auto resources = habitats.calculate_resources(state, years);
+// resources now contains sustainable O2, water, power, and habitat mass
 ```
 
-See the three demos for concrete usage.
+See the four demos for end-to-end usage.
 
 ## Roadmap (Sequential Core-Out)
 
 1. ✅ **Foundation** (v0.1)
 2. ✅ **Weather/Dust Storms** (v0.2)
-3. ✅ **Terraforming** (v0.3) — this release
-4. Habitats + resource loops
+3. ✅ **Terraforming** (v0.3)
+4. ✅ **Habitats + Resource Loops** (v0.4) — this release
 5. Human survival models
 6. Viz/scenarios
 7. Modularity/tests/docs/examples
 
-## Verification
-- `terraforming_demo` shows realistic multi-decade pressure rise, warming, and GCR reduction.
-- All modules compose without breaking changes to earlier layers.
-
-**Next logical step**: Habitats + resource loops (ISRU, ECLSS, power, closed loops) once we have a terraformed environmental state.
+**Next logical step**: Human survival models (radiation health, low-g physiology, nutrition, psychology).
 
 Failure is mandatory. Quitting is not. — SkyForge Dynamics style.

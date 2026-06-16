@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(mars_sim VERSION 0.3.0 LANGUAGES CXX)
+project(mars_sim VERSION 0.4.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -36,9 +36,17 @@ target_include_directories(mars_terraforming PUBLIC
 )
 target_link_libraries(mars_terraforming PUBLIC mars_foundation mars_weather)
 
+add_library(mars_habitats STATIC
+    src/habitats/habitats.cpp
+)
+target_include_directories(mars_habitats PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_link_libraries(mars_habitats PUBLIC mars_foundation mars_weather mars_terraforming)
+
 # Example executables
 add_executable(foundation_demo examples/foundation_demo.cpp)
-target_link_libraries(foundation_demo PRIVATE mars_foundation mars_weather mars_terraforming)
+target_link_libraries(foundation_demo PRIVATE mars_foundation mars_weather mars_terraforming mars_habitats)
 
 add_executable(weather_demo examples/weather_demo.cpp)
 target_link_libraries(weather_demo PRIVATE mars_foundation mars_weather)
@@ -46,16 +54,19 @@ target_link_libraries(weather_demo PRIVATE mars_foundation mars_weather)
 add_executable(terraforming_demo examples/terraforming_demo.cpp)
 target_link_libraries(terraforming_demo PRIVATE mars_foundation mars_weather mars_terraforming)
 
+add_executable(habitats_demo examples/habitats_demo.cpp)
+target_link_libraries(habitats_demo PRIVATE mars_foundation mars_weather mars_terraforming mars_habitats)
+
 # Simple test executable (no external test framework for standalone)
 add_executable(foundation_tests tests/foundation_tests.cpp)
-target_link_libraries(foundation_tests PRIVATE mars_foundation mars_weather mars_terraforming)
+target_link_libraries(foundation_tests PRIVATE mars_foundation mars_weather mars_terraforming mars_habitats)
 
 # Install rules (production)
-install(TARGETS mars_foundation mars_weather mars_terraforming foundation_demo weather_demo terraforming_demo foundation_tests
+install(TARGETS mars_foundation mars_weather mars_terraforming mars_habitats foundation_demo weather_demo terraforming_demo habitats_demo foundation_tests
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 install(DIRECTORY include/ DESTINATION include)
 
-message(STATUS "Mars Simulator v0.3 configured (foundation + weather + terraforming). Build with: cmake --build . --config Release")
+message(STATUS "Mars Simulator v0.4 configured (foundation + weather + terraforming + habitats). Build with: cmake --build . --config Release")

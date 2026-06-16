@@ -2,8 +2,7 @@
 
 /**
  * @file orchestrator.hpp
- * @brief End-to-End Mission Orchestrator + Logistics concepts.
- *        Time-stepped simulation tying the full stack with stochastic events.
+ * @brief End-to-End Mission Orchestrator with agent control and full stack integration.
  */
 
 #include <mars/foundation/environment.hpp>
@@ -11,6 +10,9 @@
 #include <mars/terraforming/terraforming.hpp>
 #include <mars/habitats/habitats.hpp>
 #include <mars/humans/humans.hpp>
+#include <mars/power/power.hpp>
+#include <mars/agents/controller.hpp>
+#include <mars/operations/operations.hpp>
 
 #include <vector>
 #include <string>
@@ -27,16 +29,18 @@ class MissionOrchestrator {
 public:
     MissionOrchestrator() = default;
 
-    /// Run a full end-to-end mission simulation
-    std::vector<MissionEvent> run_mission(double duration_years = 5.0);
+    /// Run a full end-to-end mission simulation with optional agent control
+    std::vector<MissionEvent> run_mission(double duration_years = 3.0, bool use_agent = true);
 
 private:
-    // Internal stack
     mars::foundation::MarsEnvironment env_;
     mars::weather::MarsWeather weather_;
     mars::terraforming::MarsTerraforming terra_;
     mars::habitats::MarsHabitats habitats_;
     mars::humans::MarsHumans humans_;
+    mars::power::MarsPower power_;
+    mars::agents::AgentController agent_;
+    mars::operations::SurfaceOperations ops_;
 };
 
 } // namespace mars::mission

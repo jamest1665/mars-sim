@@ -1,6 +1,6 @@
 /**
  * @file orchestrator.cpp
- * @brief Implementation of the End-to-End Mission Orchestrator.
+ * @brief Implementation of the End-to-End Mission Orchestrator with agent control.
  */
 
 #include "mars/mission/orchestrator.hpp"
@@ -9,12 +9,13 @@
 
 namespace mars::mission {
 
-std::vector<MissionEvent> MissionOrchestrator::run_mission(double duration_years) {
+std::vector<MissionEvent> MissionOrchestrator::run_mission(double duration_years, bool use_agent) {
     std::vector<MissionEvent> events;
     std::mt19937 rng(123);
 
     double year = 0.0;
-    const double dt = 0.5;
+    const double dt = 0.25;
+    double crew_size = 6.0;
 
     while (year < duration_years) {
         auto state = env_.sample_state({-30, 0, 0}, 270.0, 0.5);
@@ -24,19 +25,35 @@ std::vector<MissionEvent> MissionOrchestrator::run_mission(double duration_years
         auto resources = habitats_.calculate_resources(state, year);
         auto health = humans_.update_health(state, resources, year);
 
-        // Simple stochastic event injection
-        if (std::uniform_real_distribution<>(0, 1)(rng) < 0.05) {
-            events.push_back({year, "Dust storm event - temporary power reduction", false});
+        // Update power system
+        double base_demand = resources.power_demand_kw + 15.0;
+        power_.update(state, year, base_demand);
+
+        // Update surface operations
+        ops_.update(state, year, crew_size);
+
+        // Run agent decision loop
+        if (use_agent) {
+            agent_.step(power_.state(), resources, year);
         }
 
-        if (health.bone_density_percent < 75.0 && year > 1.0) {
-            events.push_back({year, "Crew bone density critically low - exercise protocol intensified", true});
+        // Stochastic events
+        if (std::uniform_real_distribution<>(0, 1)(rng) < 0.04) {
+            events.push_back({year, "Significant dust storm - reduced solar output", false});
+        }
+
+        if (health.bone_density_percent < 78.0 && year > 1.5) {
+            events.push_back({year, "Crew health alert: intensified countermeasures required", true});
+        }
+
+        if (power_.state().power_critical) {
+            events.push_back({year, "Power system critical - agent reduced non-essential loads", true});
         }
 
         year += dt;
     }
 
-    events.push_back({duration_years, "Mission complete - crew health within limits", true});
+    events.push_back({duration_years, "Mission complete", true});
     return events;
 }
 

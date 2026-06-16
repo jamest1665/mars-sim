@@ -2,7 +2,7 @@
 
 /**
  * @file reliability.hpp
- * @brief Basic probabilistic reliability and failure modeling.
+ * @brief Probabilistic reliability, failure modes, and maintenance modeling.
  */
 
 #include <mars/foundation/types.hpp>
@@ -17,17 +17,20 @@ struct FailureEvent {
     std::string component;
     std::string description;
     bool critical{false};
+    bool maintenance_performed{false};
 };
 
 class ReliabilityModel {
 public:
     ReliabilityModel() = default;
 
-    /// Simulate possible failures over time
     std::vector<FailureEvent> simulate_failures(double years, double crew_size = 6.0);
+
+    void perform_maintenance(double year, const std::string& component);
 
 private:
     std::mt19937 rng_{42};
+    double maintenance_factor_{1.0};
 };
 
 } // namespace mars::reliability

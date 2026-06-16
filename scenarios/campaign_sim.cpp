@@ -1,6 +1,6 @@
 /**
  * @file campaign_sim.cpp
- * @brief Full Campaign Simulator demo.
+ * @brief Full Campaign Simulator demo with dashboard.
  */
 
 #include "mars/campaign/campaign.hpp"
@@ -12,8 +12,8 @@ using namespace mars::campaign;
 using namespace mars::agents;
 
 int main() {
-    std::cout << "=== Mars Campaign Simulator v1.1 ===\n";
-    std::cout << "15-year colony campaign with dynamic agent decisions\n\n";
+    std::cout << "=== Mars Campaign Simulator v1.2 ===\n";
+    std::cout << "Long-term colony campaign with adaptive agents\n\n";
 
     CampaignSimulator sim;
     auto result = sim.run_campaign(15.0, AgentStrategy::BALANCED, 6, 2.5);
@@ -38,6 +38,13 @@ int main() {
     std::cout << "Campaign Duration:          " << result.colony_sustainability_years << " years\n";
     std::cout << "Final Risk Score:           " << result.final_risk_score << "\n";
     std::cout << "Campaign Success:           " << (result.campaign_success ? "YES" : "NO") << "\n";
+
+    if (!result.yearly_data.empty()) {
+        double avg_power = 0.0;
+        for (const auto& y : result.yearly_data) avg_power += y.power_margin_kw;
+        avg_power /= result.yearly_data.size();
+        std::cout << "Average Power Margin:     " << avg_power << " kW\n";
+    }
 
     std::cout << "\nThis is now a real mission-planning engine.\n";
 

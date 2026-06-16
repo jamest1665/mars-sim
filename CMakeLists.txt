@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
-project(mars_sim VERSION 0.5.0 LANGUAGES CXX)
+project(mars_sim VERSION 0.6.0 LANGUAGES CXX)
 
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -52,6 +52,14 @@ target_include_directories(mars_humans PUBLIC
 )
 target_link_libraries(mars_humans PUBLIC mars_foundation mars_weather mars_terraforming mars_habitats)
 
+add_library(mars_viz STATIC
+    src/viz/viz.cpp
+)
+target_include_directories(mars_viz PUBLIC
+    ${CMAKE_CURRENT_SOURCE_DIR}/include
+)
+target_link_libraries(mars_viz PUBLIC mars_foundation mars_weather mars_terraforming mars_habitats mars_humans)
+
 # Example executables
 add_executable(foundation_demo examples/foundation_demo.cpp)
 target_link_libraries(foundation_demo PRIVATE mars_foundation mars_weather mars_terraforming mars_habitats mars_humans)
@@ -68,16 +76,19 @@ target_link_libraries(habitats_demo PRIVATE mars_foundation mars_weather mars_te
 add_executable(humans_demo examples/humans_demo.cpp)
 target_link_libraries(humans_demo PRIVATE mars_foundation mars_weather mars_terraforming mars_habitats mars_humans)
 
+add_executable(viz_demo examples/viz_demo.cpp)
+target_link_libraries(viz_demo PRIVATE mars_foundation mars_weather mars_terraforming mars_habitats mars_humans mars_viz)
+
 # Simple test executable (no external test framework for standalone)
 add_executable(foundation_tests tests/foundation_tests.cpp)
-target_link_libraries(foundation_tests PRIVATE mars_foundation mars_weather mars_terraforming mars_habitats mars_humans)
+target_link_libraries(foundation_tests PRIVATE mars_foundation mars_weather mars_terraforming mars_habitats mars_humans mars_viz)
 
 # Install rules (production)
-install(TARGETS mars_foundation mars_weather mars_terraforming mars_habitats mars_humans foundation_demo weather_demo terraforming_demo habitats_demo humans_demo foundation_tests
+install(TARGETS mars_foundation mars_weather mars_terraforming mars_habitats mars_humans mars_viz foundation_demo weather_demo terraforming_demo habitats_demo humans_demo viz_demo foundation_tests
     RUNTIME DESTINATION bin
     LIBRARY DESTINATION lib
     ARCHIVE DESTINATION lib
 )
 install(DIRECTORY include/ DESTINATION include)
 
-message(STATUS "Mars Simulator v0.5 configured (full stack through humans). Build with: cmake --build . --config Release")
+message(STATUS "Mars Simulator v0.6 configured (full stack + viz/scenarios). Build with: cmake --build . --config Release")

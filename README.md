@@ -1,4 +1,4 @@
-# Mars Simulator (v1.0)
+# Mars Simulator (v1.1)
 
 **Standalone, modular, production-ready C++23 Mars environment simulator.**
 
@@ -15,8 +15,9 @@
 - Surface Operations & Mobility (v0.8)
 - Reliability, Failure Modes & Maintenance (v1.0)
 - Reference Mission Library & Validation (v1.0)
+- **Campaign Simulator** (v1.1) — multi-year colony growth, Earth supply events, dynamic agents, rolling reliability
 
-Full physics-to-crew + autonomous agents + reliability modeling. Version 1.0 complete.
+**New in v1.1**: Full Campaign Simulator turns the system into a real long-term mission planning engine.
 
 ## Quick Start
 
@@ -26,13 +27,7 @@ cd mars-sim
 mkdir build && cd build
 cmake .. -DCMAKE_BUILD_TYPE=Release
 cmake --build . -j
-./reference_mission
-./mission_profiles
-./validation
+./campaign_sim
 ```
-
-## Roadmap Achieved
-
-All core sequential modules complete through v1.0, including closed-loop agent control, reliability, and scenario library.
 
 Failure is mandatory. Quitting is not. — SkyForge Dynamics style.
